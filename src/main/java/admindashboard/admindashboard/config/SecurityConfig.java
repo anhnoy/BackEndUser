@@ -25,8 +25,9 @@ public class SecurityConfig {
     private final String[] PUBLIC = {
             "/users/login",
             "/users/register",
-            "/users/all",
+            "/users/allusers",
             "/users/test",
+            "/uploads/**"
 //            "/file/image/user-profile",
     };
 
@@ -61,8 +62,8 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, PUBLIC).anonymous()
-                .requestMatchers(HttpMethod.GET, PUBLIC).anonymous()
+                .requestMatchers(HttpMethod.POST, PUBLIC).permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC).permitAll()
                 .requestMatchers(HttpMethod.PUT, PUBLIC).permitAll()
                 .requestMatchers(HttpMethod.DELETE, PUBLIC).permitAll()
                 .anyRequest().authenticated()

@@ -48,9 +48,8 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<Object> all() throws BaseException {
-        UsersEntity userByIdToken = tokenService.getUserByIdToken();
+    @GetMapping("/allusers")
+    public ResponseEntity<Object> all(){
         List<UsersEntity> all = usersRepository.findAll();
         return ResponseEntity.ok(all);
     }
