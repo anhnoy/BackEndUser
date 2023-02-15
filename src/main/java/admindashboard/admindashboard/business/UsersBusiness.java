@@ -26,14 +26,15 @@ public class UsersBusiness {
     }
 
     public Object register(UsersRegister request) throws BaseException {
+        if (usersService.existsByUsername(request.getUsername())){
+           throw UsersException.userAlreadyExists();
+        }
         usersService.createUser(request.getUsername(),request.getEmail(),request.getPassword());
         return new Response().success("success");
     }
 
     public Object login(Login request) throws UsersException {
-        System.out.println(request.getUsername());
         Optional<UsersEntity> byUsername = usersRepository.findByUsername(request.getUsername());
-        System.out.println(byUsername);
         if (byUsername.isEmpty()){
             throw UsersException.userAlreadyExists();
         }

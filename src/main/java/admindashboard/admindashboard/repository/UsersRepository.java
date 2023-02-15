@@ -12,6 +12,8 @@ public interface UsersRepository extends JpaRepository<UsersEntity,String> {
 
     Optional<UsersEntity>findByUsername(String username);
 
+    boolean existsByUsername(String username);
+
     @Query(value = """
             select a.username,b.email
             from users_entity as a,

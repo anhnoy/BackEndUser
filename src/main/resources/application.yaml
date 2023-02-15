@@ -17,10 +17,6 @@ Spring:
     url: jdbc:postgresql://localhost:5432/dashboard
     username: postgres
     password: Porpopor
-  security:
-    user:
-      name: porpopor
-      password: porpopor
 
 app:
   token:

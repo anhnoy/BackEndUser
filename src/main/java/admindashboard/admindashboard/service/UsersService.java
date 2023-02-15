@@ -30,6 +30,10 @@ public class UsersService {
 
         usersRepository.save(entity);
     }
+    public boolean existsByUsername(String username){
+        boolean user = usersRepository.existsByUsername(username);
+        return  user;
+    }
 
     public boolean mathpassword(String rawpassword, String endcodepassword){
         return passwordEncoder.matches(rawpassword,endcodepassword);

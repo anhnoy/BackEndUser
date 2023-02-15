@@ -1,6 +1,6 @@
 package admindashboard.admindashboard.exception;
-import jakarta.persistence.MappedSuperclass;
 
+import jakarta.persistence.MappedSuperclass;
 import java.io.IOException;
 
 @MappedSuperclass
