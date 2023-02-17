@@ -29,10 +29,10 @@ public class UserController {
         this.usersBusiness = usersBusiness;
         this.tokenService = tokenService;
     }
-//    @GetMapping
-//    public Object api(){
-//        return "test";
-//    }
+    @GetMapping
+    public Object api(){
+        return "test";
+    }
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UsersRegister request)throws BaseException {
         Object response = usersBusiness.register(request);
