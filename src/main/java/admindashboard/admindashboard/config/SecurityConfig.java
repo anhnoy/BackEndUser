@@ -72,6 +72,4 @@ public class SecurityConfig {
                 .and().apply(new TokenFilterConfiguerer(tokenService))
                 .and().build();
     }
-
-
 }

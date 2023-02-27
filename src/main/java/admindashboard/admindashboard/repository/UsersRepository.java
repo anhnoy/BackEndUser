@@ -15,10 +15,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity,String> {
     boolean existsByUsername(String username);
 
     @Query(value = """
-            select a.username,b.email
-            from users_entity as a,
-            admin_entity as b
-            where a.id = b.user_id
+            select * from users_entity
 
             """,nativeQuery = true)
     List<Map <String,Object>>test();

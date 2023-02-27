@@ -19,7 +19,7 @@ public class UsersService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void createUser(String username, String email, String password) throws BaseException {
+    public void  createUser(String username, String email, String password) throws BaseException {
 
         UsersEntity entity = new UsersEntity();
         entity.setEmail(email);

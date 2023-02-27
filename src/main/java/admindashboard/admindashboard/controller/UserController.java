@@ -55,8 +55,8 @@ public class UserController {
 
     @GetMapping("/test")
     public List<Map<String, Object>> test(){
-        Map<String,Object> map = new HashMap<>();
-        map.put("KKKK",true);
+            Map<String,Object> map = new HashMap<>();
+            map.put("KKKK",true);
 //        return map;
         return usersRepository.test();
     }
