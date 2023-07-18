@@ -3,7 +3,7 @@ server:
 Spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       jdbc:
         time_zone: ICT
         generate-ddl: true
