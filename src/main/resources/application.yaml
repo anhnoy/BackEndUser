@@ -3,7 +3,7 @@ server:
 Spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
       jdbc:
         time_zone: ICT
         generate-ddl: true
@@ -14,9 +14,12 @@ Spring:
       max-file-size: 5MB
       max-request-size: 5MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/dashboard
-    username: postgres
-    password: Porpopor
+    url: jdbc:mysql://localhost:3306/back_end
+    username: root
+    password:
+#    url: jdbc:postgresql://localhost:5432/dashboard
+#    username: postgres
+#    password: Porpopor
 
 app:
   token:
