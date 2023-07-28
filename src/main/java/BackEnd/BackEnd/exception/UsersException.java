@@ -15,6 +15,16 @@ public class UsersException extends BaseException {
     return new UsersException("loginFail");
 
   }
+  public static UsersException phoneBlank() {
+
+    return new UsersException("phone.blank");
+
+  }
+  public static UsersException emailBlank() {
+
+    return new UsersException("email.blank");
+
+  }
 
   public static UsersException emailAlreadyExists() {
 

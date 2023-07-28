@@ -1,54 +1,35 @@
 package BackEnd.BackEnd.controller;
 
 
-import BackEnd.BackEnd.entity.UsersEntity;
-import BackEnd.BackEnd.model.usersModel.UsersRegister;
-import BackEnd.BackEnd.repository.UsersRepository;
 import BackEnd.BackEnd.service.TokenService;
-import BackEnd.BackEnd.business.UsersBusiness;
 import BackEnd.BackEnd.exception.BaseException;
-import BackEnd.BackEnd.exception.UsersException;
-import BackEnd.BackEnd.model.usersModel.Login;
+import BackEnd.BackEnd.service.UsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UsersRepository usersRepository;
-    private final UsersBusiness usersBusiness;
-    private final TokenService tokenService;
+    @Autowired
+    private TokenService tokenService;
 
-    public UserController(UsersRepository usersRepository, UsersBusiness usersBusiness, TokenService tokenService) {
-        this.usersRepository = usersRepository;
-        this.usersBusiness = usersBusiness;
-        this.tokenService = tokenService;
-    }
+    @Autowired
+    private UsersService usersService;
+
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody UsersRegister request)throws BaseException {
-        Object response = usersBusiness.register(request);
+    public ResponseEntity<Object> register(@RequestBody Map<String,Object> req)throws BaseException {
+        Object response = usersService.registerUser(req);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object>login(@RequestBody Login request) throws UsersException {
-        Object response = usersBusiness.login(request);
+    public ResponseEntity<Object> login(@RequestBody Map<String,Object> req) throws Exception {
+        Object response = usersService.loginUser(req);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<Object>getProfile() throws BaseException {
-        Object response = usersBusiness.userProfile();
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/allusers")
-    public ResponseEntity<Object> all(){
-        List<UsersEntity> all = usersRepository.findAll();
-        return ResponseEntity.ok(all);
     }
 
 //    @GetMapping("/test")

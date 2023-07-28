@@ -1,9 +1,6 @@
 package BackEnd.BackEnd.service;
 
-import BackEnd.BackEnd.entity.UsersEntity;
-import BackEnd.BackEnd.exception.BaseException;
-import BackEnd.BackEnd.exception.UsersException;
-import BackEnd.BackEnd.repository.UsersRepository;
+import BackEnd.BackEnd.config.ConfigDB;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -14,14 +11,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.*;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 public class TokenService {
-
-    private final UsersRepository usersRepository;
 
     @Value("${app.token.secret}")
     private String secret;
@@ -29,31 +24,27 @@ public class TokenService {
     @Value("${app.token.issuer}")
     private String issuer;
 
-    public TokenService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
-
-    public String tokenize(UsersEntity user) {
+    public String tokenize(ResultSet user) throws SQLException {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 24);
         Date expiresAt = calendar.getTime();
 
         return JWT.create()
                 .withIssuer(issuer)
-                .withClaim("userId", user.getId())
+                .withClaim("userId", user.getString("id"))
                 .withClaim("role", "user")
                 .withExpiresAt(expiresAt)
                 .sign(algorithm());
     }
 
-    public String tokenizeRefresh(UsersEntity user) {
+    public String tokenizeRefresh(ResultSet user) throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_WEEK, 7);
         Date expiresAt = calendar.getTime();
 
         return JWT.create()
                 .withIssuer(issuer)
-                .withClaim("userId", user.getId().toString())
+                .withClaim("userId", user.getString("id"))
                 .withExpiresAt(expiresAt)
                 .sign(algorithm());
     }
@@ -75,14 +66,22 @@ public class TokenService {
         return Algorithm.HMAC256(secret);
     }
 
-    public UsersEntity getUserByIdToken() throws BaseException {
+    public String getUserByToken(){
+        try(Connection conn = ConfigDB.db()){
+            String sql = "select * from users_entity where id = ?";
+            System.out.println(sql);
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setString(1, this.userId());
 
-        Optional<UsersEntity> opt = usersRepository.findById(this.userId());
-        if (opt.isEmpty()) {
-            throw UsersException.userAlreadyExists();
+            ResultSet resultSet = preparedStatement.executeQuery();
+//            resultSet.close();
+            if (resultSet.next()){
+                return resultSet.getString("id");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        UsersEntity user = opt.get();
-        return user;
+        return null;
     }
 
 

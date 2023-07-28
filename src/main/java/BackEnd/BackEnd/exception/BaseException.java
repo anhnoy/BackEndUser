@@ -1,6 +1,8 @@
 package BackEnd.BackEnd.exception;
 
+
 import jakarta.persistence.MappedSuperclass;
+
 import java.io.IOException;
 
 @MappedSuperclass
