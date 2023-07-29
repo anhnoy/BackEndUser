@@ -36,48 +36,46 @@ public class FileController {
 
     @PostMapping("/image/user-profile")
     public Object uploadProfilePicture(@RequestParam("fileName") MultipartFile file) throws IOException {
-            String userByToken = tokenService.getUserByToken();
-            System.out.println(userByToken);
-            System.out.println(file.getOriginalFilename());
-            String dir = new UploadFileReq().getDirUserProfile();
-            String timeStamp = new UploadFileReq().getTimeStamp();
-            String imgName = new UploadFileReq().getImgName();
+        Map<String, Object> userByToken = tokenService.getUserByToken();
+        System.out.println(file.getOriginalFilename());
+        String dir = new UploadFileReq().getDirUserProfile();
+        String timeStamp = new UploadFileReq().getTimeStamp();
+        String imgName = new UploadFileReq().getImgName();
 
-            if (file == null) {
-                //throw error
-                throw UsersException.userAlreadyExists();
-            }
-            if (file.getSize() > 1048576 * 5) {
+        if (file == null) {
+            //throw error
+            throw UsersException.userAlreadyExists();
+        }
+        if (file.getSize() > 1048576 * 5) {
 //            throw error
-                throw UsersException.userAlreadyExists();
-            }
-            String contentType = file.getContentType();
-            if (contentType == null) {
-                //throw  error
-                throw UsersException.userAlreadyExists();
-            }
+            throw UsersException.userAlreadyExists();
+        }
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            //throw  error
+            throw UsersException.userAlreadyExists();
+        }
 
-            StringBuilder fileNames = new StringBuilder();
+        StringBuilder fileNames = new StringBuilder();
 
-            Path fileNameAndPath = Paths.get(uploadDirectory + dir, imgName);
-            fileNames.append(file.getOriginalFilename());
-            try {
-                Files.write(fileNameAndPath, file.getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                byte[] bytes = file.getBytes();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        Path fileNameAndPath = Paths.get(uploadDirectory + dir, imgName);
+        fileNames.append(file.getOriginalFilename());
+        try {
+            Files.write(fileNameAndPath, file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            byte[] bytes = file.getBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            Map<Object, Object> img = new HashMap<>();
-            img.put("url", "http://localhost:8080" + dir + imgName);
-            img.put("name", imgName);
-        try(Connection conn = ConfigDB.db()){
-            String sql_update = "UPDATE users_entity set picture = '"+ imgName +"' where id = '"+ userByToken +"'";
-            System.out.println(sql_update);
+        Map<Object, Object> img = new HashMap<>();
+        img.put("url", "http://localhost:8080" + dir + imgName);
+        img.put("name", imgName);
+        try (Connection conn = ConfigDB.db()) {
+            String sql_update = "UPDATE users_entity set picture = '" + imgName + "', update_date = CURRENT_TIMESTAMP where id = '" + userByToken.get("id") + "'";
             Statement statement = conn.createStatement();
             statement.executeUpdate(sql_update);
 
@@ -86,20 +84,20 @@ public class FileController {
         }
 
 //        return new Response().success("yeah");
-            return new Response().ok("upload success", "img", img);
+        return new Response().ok("upload success", "img", img);
 
     }
 
 
     @GetMapping("/userProfile")
-    public ResponseEntity<Object>getUserProfile() throws BaseException {
-        String userByToken = tokenService.getUserByToken();
-        try(Connection conn = ConfigDB.db()){
+    public ResponseEntity<Object> getUserProfile() throws BaseException {
+        Map<String, Object> userByToken = tokenService.getUserByToken();
+        try (Connection conn = ConfigDB.db()) {
             String user_picture;
-            String sql = "select * from users_entity where id = '"+userByToken+"'";
+            String sql = "select * from users_entity where id = '" + userByToken.get("id") + "'";
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
-            if (resultSet.next()){
+            if (resultSet.next()) {
 
                 return ResponseEntity.ok(url.getHost() + url.getDirUserProfile() + resultSet.getString("picture"));
             }

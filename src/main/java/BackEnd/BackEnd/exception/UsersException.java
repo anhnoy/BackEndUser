@@ -26,6 +26,18 @@ public class UsersException extends BaseException {
 
   }
 
+  public static UsersException firstnameBlank() {
+
+    return new UsersException("firstname.blank");
+
+  }
+
+  public static UsersException lastnameBlank() {
+
+    return new UsersException("lastname.blank");
+
+  }
+
   public static UsersException emailAlreadyExists() {
 
     return new UsersException("email.already.exists");

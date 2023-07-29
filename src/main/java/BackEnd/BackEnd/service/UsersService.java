@@ -20,7 +20,7 @@ import java.util.UUID;
 public class UsersService {
 
     @Autowired
-    private TokenService tokenize;
+    private TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     public UsersService(PasswordEncoder passwordEncoder) {
@@ -85,7 +85,7 @@ public class UsersService {
             boolean next = rs.next();
             System.out.println(next);
             if (next){
-                token = tokenize.tokenize(rs);
+                token = tokenService.tokenize(rs);
                 if (!mathpassword(password, rs.getString("password"))){
                     throw UsersException.passwordNotmatch();
                 }
@@ -95,6 +95,44 @@ public class UsersService {
             throw new RuntimeException(e);
         }
         return new Response().ok("Ok","token",token);
+    }
+
+    public Object userProfile() throws BaseException {
+//        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> userByToken = tokenService.getUserByToken();
+
+        return new Response().ok("Ok","value",userByToken);
+    }
+
+    public Object editProfile(Map<String,Object> req) throws BaseException {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> user = tokenService.getUserByToken();
+        try(Connection conn = ConfigDB.db()){
+            String email = req.get("email").toString();
+            String phone = req.get("phone").toString();
+            String firstname = req.get("firstname").toString();
+            String lastname = req.get("lastname").toString();
+
+            if (email.isBlank()){
+                throw UsersException.emailBlank();
+            }
+            if (phone.isBlank()){
+                throw UsersException.phoneBlank();
+            }
+            if (firstname.isBlank()){
+                throw UsersException.firstnameBlank();
+            }
+            if (lastname.isBlank()){
+                throw UsersException.lastnameBlank();
+            }
+            String sql_update = "UPDATE users_entity set email = '"+ email +"',phone = '"+ phone +"',firstname = '"+ firstname +"',lastname = '"+ lastname +"',update_date = CURRENT_TIMESTAMP where id = '"+ user.get("id") +"'";
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(sql_update);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return new Response().success("success");
     }
 
     public boolean mathpassword(String rawpassword, String endcodepassword){

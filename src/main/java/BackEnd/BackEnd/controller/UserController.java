@@ -32,11 +32,15 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/test")
-//    public List<Map<String, Object>> test(){
-//            Map<String,Object> map = new HashMap<>();
-//            map.put("KKKK",true);
-////        return map;
-//        return usersRepository.test();
-//    }
+    @GetMapping("/userProfile")
+    public ResponseEntity<Object> userProfile() throws Exception {
+        Object response = usersService.userProfile();
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/editProfile")
+    public ResponseEntity<Object> editProfile(@RequestBody Map<String,Object> req) throws Exception {
+        Object response = usersService.editProfile(req);
+        return ResponseEntity.ok(response);
+    }
 }

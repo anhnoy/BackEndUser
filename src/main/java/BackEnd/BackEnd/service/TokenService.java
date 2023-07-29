@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
-import java.util.Calendar;
+import java.util.*;
 import java.util.Date;
 
 @Service
@@ -66,22 +66,29 @@ public class TokenService {
         return Algorithm.HMAC256(secret);
     }
 
-    public String getUserByToken(){
+    public Map<String, Object> getUserByToken(){
+        Map<String, Object> map = new HashMap<>();
         try(Connection conn = ConfigDB.db()){
             String sql = "select * from users_entity where id = ?";
-            System.out.println(sql);
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, this.userId());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 //            resultSet.close();
             if (resultSet.next()){
-                return resultSet.getString("id");
+                map.put("id",resultSet.getString("id"));
+                map.put("email",resultSet.getString("email"));
+                map.put("phone",resultSet.getString("phone"));
+                map.put("firstname",resultSet.getString("firstname"));
+                map.put("lastname",resultSet.getString("lastname"));
+                map.put("picture",resultSet.getString("picture"));
+                map.put("role",resultSet.getString("role"));
+                return map;
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return null;
+        return map;
     }
 
 
