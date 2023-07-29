@@ -98,8 +98,7 @@ public class FileController {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             if (resultSet.next()) {
-
-                return ResponseEntity.ok(url.getHost() + url.getDirUserProfile() + resultSet.getString("picture"));
+                return ResponseEntity.ok(new Response().ok("success","picture", (url.getHost() + url.getDirUserProfile() + resultSet.getString("picture"))));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
