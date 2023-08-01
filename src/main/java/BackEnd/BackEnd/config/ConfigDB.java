@@ -6,7 +6,10 @@ import java.sql.SQLException;
 
 public class ConfigDB {
     public static Connection db() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/back_end";
+        // add your url db last / add your name db
+        String url = "jdbc:mysql://localhost:3306/backend";
+
+        //add your DB username and password
         String username = "root";
         String password = "";
         return DriverManager.getConnection(url, username, password);

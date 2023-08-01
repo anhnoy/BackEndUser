@@ -28,7 +28,8 @@ public class SecurityConfig {
             "/users/register",
             "/users/allusers",
             "/users/test",
-            "/uploads/**"
+            "/uploads/**",
+            "/users"
 //            "/file/image/user-profile",
     };
 

@@ -20,6 +20,11 @@ public class UserController {
     @Autowired
     private UsersService usersService;
 
+    @GetMapping()
+    public String testAPI(){
+        return this.getClass().getName();
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody Map<String,Object> req)throws BaseException {
         Object response = usersService.registerUser(req);
