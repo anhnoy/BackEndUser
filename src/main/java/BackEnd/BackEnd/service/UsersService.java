@@ -89,6 +89,8 @@ public class UsersService {
                 if (!mathpassword(password, rs.getString("password"))){
                     throw UsersException.passwordNotmatch();
                 }
+            }else {
+                throw UsersException.loginFail();
             }
 
         } catch (SQLException e) {
